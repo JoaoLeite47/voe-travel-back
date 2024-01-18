@@ -1,4 +1,5 @@
 const mysql = require("mysql2/promise");
+const enviarEmailBackup = require("../sendEmail/sendEmail")
 
 const connection = mysql.createPool(process.env.DATABASE_URL);
 
@@ -20,6 +21,7 @@ exports.insertClients = async (data) => {
     "INSERT INTO clientes(nome, pedido) VALUES (?,?)",
     values
   );
+  await enviarEmailBackup(data);
 };
 
 exports.updateClients = async (data, id) => {
