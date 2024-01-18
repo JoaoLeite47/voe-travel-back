@@ -100,6 +100,36 @@ app.delete("/opcoes_hoteis/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
+app.get("/servicos", async (req, res) => {
+  const results = await models.selectOpcoesServicos();
+  res.json(results);
+});
+
+app.get("/servicos/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesServicosId(id);
+  res.json(results);
+});
+
+app.post("/servicos", async (req, res) => {
+  const servicos = req.body;
+  await models.insertServicos(servicos);
+  res.sendStatus(201);
+});
+
+app.patch("/servicos/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+  await models.updateServicos(data, id);
+  res.sendStatus(200);
+});
+
+app.delete("/servicos/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  await models.deleteServicos(id);
+  res.sendStatus(204);
+});
+
 app.listen(process.env.PORT, () => {
   console.log("app is runnig");
 });

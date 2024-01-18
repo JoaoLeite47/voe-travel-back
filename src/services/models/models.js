@@ -154,3 +154,61 @@ exports.deleteOpcoesHoteis = async (id) => {
   const values = [id];
   await connection.query("DELETE FROM opcoes_hoteis WHERE id=?", values);
 };
+
+exports.selectOpcoesServicos = async () => {
+  const result = await connection.query("SELECT * FROM servicos;");
+  return result[0];
+};
+
+exports.selectOpcoesServicosId = async (id) => {
+  const result = await connection.query("SELECT * FROM servicos WHERE id=?;", [
+    id,
+  ]);
+  return result[0];
+};
+
+exports.insertServicos = async (data) => {
+  const values = [
+    data.client_id,
+    data.aluguel_de_carros,
+    data.aluguel_de_carros_descricao,
+    data.passeios,
+    data.passeios_descricao,
+    data.ingressos,
+    data.ingressos_descricao,
+    data.guias,
+    data.guias_descricao,
+    data.cruzeiros,
+    data.cruzeiros_descricao,
+  ];
+  await connection.query(
+    "INSERT INTO servicos(client_id, aluguel_de_carros, aluguel_de_carros_descricao, passeios, passeios_descricao, ingressos, ingressos_descricao, guias, guias_descricao, cruzeiros, cruzeiros_descricao ) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+    values
+  );
+};
+
+exports.updateServicos = async (data, id) => {
+    const values = [
+        data.client_id,
+        data.aluguel_de_carros,
+        data.aluguel_de_carros_descricao,
+        data.passeios,
+        data.passeios_descricao,
+        data.ingressos,
+        data.ingressos_descricao,
+        data.guias,
+        data.guias_descricao,
+        data.cruzeiros,
+        data.cruzeiros_descricao,
+        id
+      ];
+    await connection.query(
+      "UPDATE servicos SET client_id=?,aluguel_de_carros=?,aluguel_de_carros_descricao=?,passeios=?,passeios_descricao=?,ingressos=?,ingressos_descricao=?,guias=?,guias_descricao=?,cruzeiros=?,cruzeiros_descricao=? WHERE id=?",
+      values
+    );
+  };
+
+  exports.deleteServicos = async (id) => {
+    const values = [id];
+    await connection.query("DELETE FROM servicos WHERE id=?", values);
+  };
