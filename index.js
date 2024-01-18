@@ -40,6 +40,36 @@ app.delete("/clientes/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
+app.get("/opcoes_aereas", async (req, res) => {
+  const results = await models.selectOpcoesAereas();
+  res.json(results);
+});
+
+app.get("/opcoes_aereas/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesAereasId(id);
+  res.json(results);
+});
+
+app.post("/opcoes_aereas", async (req, res) => {
+  const opcoes_aereas = req.body;
+  await models.insertOpcoesAereas(opcoes_aereas);
+  res.sendStatus(201);
+});
+
+app.patch("/opcoes_aereas/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+  await models.updateOpcoesAereas(data, id);
+  res.sendStatus(200);
+});
+
+app.delete("/opcoes_aereas/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  await models.deleteOpcoesAereas(id);
+  res.sendStatus(204);
+});
+
 app.listen(process.env.PORT, () => {
   console.log("app is runnig");
 });
