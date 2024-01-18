@@ -70,6 +70,36 @@ app.delete("/opcoes_aereas/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
+app.get("/opcoes_hoteis", async (req, res) => {
+  const results = await models.selectOpcoesHoteis();
+  res.json(results);
+});
+
+app.get("/opcoes_hoteis/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesHoteisId(id);
+  res.json(results);
+});
+
+app.post("/opcoes_hoteis", async (req, res) => {
+  const opcoes_hoteis = req.body;
+  await models.insertOpcoesHoteis(opcoes_hoteis);
+  res.sendStatus(201);
+});
+
+app.patch("/opcoes_hoteis/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+  await models.updateOpcoeshoteis(data, id);
+  res.sendStatus(200);
+});
+
+app.delete("/opcoes_hoteis/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  await models.deleteOpcoesHoteis(id);
+  res.sendStatus(204);
+});
+
 app.listen(process.env.PORT, () => {
   console.log("app is runnig");
 });

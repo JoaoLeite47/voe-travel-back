@@ -88,6 +88,69 @@ exports.updateOpcoesAereas = async (data, id) => {
 };
 
 exports.deleteOpcoesAereas = async (id) => {
-    const values = [id];
-    await connection.query("DELETE FROM opcoes_aereas WHERE id=?", values);
-  };
+  const values = [id];
+  await connection.query("DELETE FROM opcoes_aereas WHERE id=?", values);
+};
+
+exports.selectOpcoesHoteis = async () => {
+  const result = await connection.query("SELECT * FROM opcoes_hoteis;");
+  return result[0];
+};
+
+exports.selectOpcoesHoteisId = async (id) => {
+  const result = await connection.query(
+    "SELECT * FROM opcoes_hoteis WHERE id=?;",
+    [id]
+  );
+  return result[0];
+};
+
+exports.insertOpcoesHoteis = async (data) => {
+  const values = [
+    data.client_id,
+    data.imagem1,
+    data.imagem2,
+    data.imagem3,
+    data.endereco,
+    data.data_inicial,
+    data.data_final,
+    data.quarto_escolhido,
+    data.quarto_escolhido_tipo,
+    data.quarto_escolhido_endereco,
+    data.cafe_da_manha,
+    data.valor_inicial,
+    data.valor_final,
+  ];
+  await connection.query(
+    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco, cafe_da_manha, valor_inicial,valor_final ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    values
+  );
+};
+
+exports.updateOpcoeshoteis = async (data, id) => {
+  const values = [
+    data.client_id,
+    data.imagem1,
+    data.imagem2,
+    data.imagem3,
+    data.endereco,
+    data.data_inicial,
+    data.data_final,
+    data.quarto_escolhido,
+    data.quarto_escolhido_tipo,
+    data.quarto_escolhido_endereco,
+    data.cafe_da_manha,
+    data.valor_inicial,
+    data.valor_final,
+    id,
+  ];
+  await connection.query(
+    "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,cafe_da_manha=?,valor_inicial=?,valor_final=? WHERE id=?",
+    values
+  );
+};
+
+exports.deleteOpcoesHoteis = async (id) => {
+  const values = [id];
+  await connection.query("DELETE FROM opcoes_hoteis WHERE id=?", values);
+};
