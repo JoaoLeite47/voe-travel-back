@@ -3,6 +3,8 @@ const nodemailer = require('nodemailer');
 // Configurar o transporter (servidor SMTP)
 const transporter = nodemailer.createTransport({
   service: 'outlook', // Exemplo: 'gmail'
+  port: 465, // ou 587 para TLS
+  secure: false, // true para SSL, false para TLS
   auth: {
     user: 'stalkerjj@outlook.com',
     pass: 'IwWYD9CbBEveg3V'
