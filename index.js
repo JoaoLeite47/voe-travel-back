@@ -1,12 +1,20 @@
 const express = require("express");
 require("dotenv").config();
 const models = require("./src/services/models/models");
-const cors = require('cors');
+const cors = require("cors");
 
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Substitua pela origem do seu cliente
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
 
 app.get("/", (req, res, next) => {
   res.send("connected to API!");
@@ -150,6 +158,8 @@ app.delete("/servicos/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
-app.listen(process.env.PORT, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
   console.log("app is runnig");
 });
