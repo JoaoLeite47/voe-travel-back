@@ -50,6 +50,14 @@ exports.selectOpcoesAereasId = async (id) => {
   return result[0];
 };
 
+exports.selectOpcoesAereasClientId = async (id) => {
+  const result = await connection.query(
+    "SELECT * FROM opcoes_aereas WHERE id_client=?;",
+    [id]
+  );
+  return result[0];
+};
+
 exports.insertOpcoesAereas = async (data) => {
   const values = [
     data.id_client,
@@ -102,6 +110,14 @@ exports.selectOpcoesHoteis = async () => {
 exports.selectOpcoesHoteisId = async (id) => {
   const result = await connection.query(
     "SELECT * FROM opcoes_hoteis WHERE id=?;",
+    [id]
+  );
+  return result[0];
+};
+
+exports.selectOpcoesHoteisClientId = async (id) => {
+  const result = await connection.query(
+    "SELECT * FROM opcoes_hoteis WHERE client_id=?;",
     [id]
   );
   return result[0];
@@ -164,6 +180,13 @@ exports.selectOpcoesServicos = async () => {
 
 exports.selectOpcoesServicosId = async (id) => {
   const result = await connection.query("SELECT * FROM servicos WHERE id=?;", [
+    id,
+  ]);
+  return result[0];
+};
+
+exports.selectOpcoesServicosId = async (id) => {
+  const result = await connection.query("SELECT * FROM servicos WHERE client_id=?;", [
     id,
   ]);
   return result[0];

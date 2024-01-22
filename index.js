@@ -51,6 +51,12 @@ app.get("/opcoes_aereas/:id", async (req, res) => {
   res.json(results);
 });
 
+app.get("/opcoes_aereas_cliente/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesAereasClientId(id);
+  res.json(results);
+});
+
 app.post("/opcoes_aereas", async (req, res) => {
   const opcoes_aereas = req.body;
   await models.insertOpcoesAereas(opcoes_aereas);
@@ -81,6 +87,12 @@ app.get("/opcoes_hoteis/:id", async (req, res) => {
   res.json(results);
 });
 
+app.get("/opcoes_hoteis_cliente/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesHoteisClientId(id);
+  res.json(results);
+});
+
 app.post("/opcoes_hoteis", async (req, res) => {
   const opcoes_hoteis = req.body;
   await models.insertOpcoesHoteis(opcoes_hoteis);
@@ -106,6 +118,12 @@ app.get("/servicos", async (req, res) => {
 });
 
 app.get("/servicos/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesServicosId(id);
+  res.json(results);
+});
+
+app.get("/servicos_client/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const results = await models.selectOpcoesServicosId(id);
   res.json(results);
