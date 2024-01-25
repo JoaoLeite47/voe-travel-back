@@ -104,11 +104,11 @@ app.get("/opcoes_hoteis_cliente/:id", async (req, res) => {
   res.json(results);
 });
 
-app.post("/opcoes_hoteis", upload.array("imagens", 3), async (req, res) => {
+app.post("/opcoes_hoteis", async (req, res) => {
   const opcoes_hoteis = req.body;
-  opcoes_hoteis.imagem1 = req.files[0].path;
-  opcoes_hoteis.imagem2 = req.files[1].path;
-  opcoes_hoteis.imagem3 = req.files[2].path;
+  // opcoes_hoteis.imagem1 = req.files[0].path;
+  // opcoes_hoteis.imagem2 = req.files[1].path;
+  // opcoes_hoteis.imagem3 = req.files[2].path;
   await models.insertOpcoesHoteis(opcoes_hoteis);
   res.sendStatus(201);
 });
