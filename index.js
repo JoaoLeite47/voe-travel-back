@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const models = require("./src/services/models/models");
 const cors = require("cors");
+const upload = require("./src/services/middleware/muterConfig");
 
 const app = express();
 
@@ -103,8 +104,11 @@ app.get("/opcoes_hoteis_cliente/:id", async (req, res) => {
   res.json(results);
 });
 
-app.post("/opcoes_hoteis", async (req, res) => {
+app.post("/opcoes_hoteis", upload.array("imagens", 3), async (req, res) => {
   const opcoes_hoteis = req.body;
+  opcoes_hoteis.imagem1 = req.files[0].path;
+  opcoes_hoteis.imagem2 = req.files[1].path;
+  opcoes_hoteis.imagem3 = req.files[2].path;
   await models.insertOpcoesHoteis(opcoes_hoteis);
   res.sendStatus(201);
 });
