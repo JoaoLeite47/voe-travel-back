@@ -139,7 +139,7 @@ app.get("/servicos/:id", async (req, res) => {
 
 app.get("/servicos_client/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const results = await models.selectOpcoesServicosId(id);
+  const results = await models.selectOpcoesServicosClientId(id);
   res.json(results);
 });
 
