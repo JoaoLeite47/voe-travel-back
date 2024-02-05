@@ -173,6 +173,12 @@ app.get("/valores/:id", async (req, res) => {
   res.json(results);
 });
 
+app.get("/valores_cliente/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesValoresClientId(id);
+  res.json(results);
+});
+
 app.post("/valores", async (req, res) => {
   const valores = req.body;
   await models.insertValores(valores);
