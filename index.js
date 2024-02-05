@@ -2,7 +2,8 @@ const express = require("express");
 require("dotenv").config();
 const models = require("./src/services/models/models");
 const cors = require("cors");
-const upload = require("./src/services/middleware/muterConfig");
+const multer = require("multer");
+const fs = require('fs/promises');
 
 const app = express();
 
@@ -16,6 +17,17 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads"); // Defina a pasta de destino para os arquivos enviados
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 app.get("/", (req, res, next) => {
   res.send("connected to API!");
@@ -104,26 +116,73 @@ app.get("/opcoes_hoteis_cliente/:id", async (req, res) => {
   res.json(results);
 });
 
-app.post("/opcoes_hoteis", async (req, res) => {
-  const opcoes_hoteis = req.body;
-  // opcoes_hoteis.imagem1 = req.files[0].path;
-  // opcoes_hoteis.imagem2 = req.files[1].path;
-  // opcoes_hoteis.imagem3 = req.files[2].path;
-  await models.insertOpcoesHoteis(opcoes_hoteis);
-  res.sendStatus(201);
-});
+app.post(
+  "/opcoes_hoteis",
+  upload.fields([
+    { name: "imagem1", maxCount: 1 },
+    { name: "imagem2", maxCount: 1 },
+    { name: "imagem3", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const opcoes_hoteis = req.body;
+    const images = req.files; // As imagens enviadas estarão disponíveis em req.files
 
-app.patch("/opcoes_hoteis/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  const data = req.body;
-  await models.updateOpcoeshoteis(data, id);
-  res.sendStatus(200);
-});
+    try {
+      await models.insertOpcoesHoteis(opcoes_hoteis, images);
+      res.sendStatus(201);
+    } catch (error) {
+      console.error("Erro ao inserir opções de hotéis:", error);
+      res.status(500).send("Erro interno no servidor");
+    }
+  }
+);
+
+app.patch(
+  "/opcoes_hoteis/:id",
+  upload.fields([
+    { name: "imagem1", maxCount: 1 },
+    { name: "imagem2", maxCount: 1 },
+    { name: "imagem3", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const id = parseInt(req.params.id);
+    const data = req.body;
+    const images = req.files; // Imagens enviadas estarão disponíveis em req.files
+
+    try {
+      await models.updateOpcoeshoteis(data, id, images);
+      res.sendStatus(200);
+    } catch (error) {
+      console.error("Erro ao atualizar opções de hotéis:", error);
+      res.status(500).send("Erro interno no servidor");
+    }
+  }
+);
 
 app.delete("/opcoes_hoteis/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  await models.deleteOpcoesHoteis(id);
-  res.sendStatus(204);
+  try {
+    const result = await models.SelectOpcoesHoteisImages(id);
+
+    if (!result || result.length === 0) {
+      throw new Error("Entrada não encontrada para o ID especificado");
+    }
+
+    const { imagem1, imagem2, imagem3 } = result[0];
+
+    // Exclua as imagens do sistema de arquivos se existirem
+    if (imagem1) await fs.unlink(`uploads/${imagem1}`);
+    if (imagem2) await fs.unlink(`uploads/${imagem2}`);
+    if (imagem3) await fs.unlink(`uploads/${imagem3}`);
+
+    // Agora exclua a entrada do banco de dados
+    await models.deleteOpcoesHoteis(id);
+    console.log(`Opções de hotéis com ID ${id} excluídas com sucesso.`);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Erro ao excluir opções de hotéis:", error);
+    res.status(500).send("Erro interno no servidor");
+  }
 });
 
 app.get("/servicos", async (req, res) => {

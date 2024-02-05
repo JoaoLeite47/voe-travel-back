@@ -119,12 +119,12 @@ exports.selectOpcoesHoteisClientId = async (id) => {
   return result[0];
 };
 
-exports.insertOpcoesHoteis = async (data) => {
+exports.insertOpcoesHoteis = async (data, images) => {
   const values = [
     data.client_id,
-    data.imagem1,
-    data.imagem2,
-    data.imagem3,
+    images.imagem1 ? images.imagem1[0].filename : null,
+    images.imagem2 ? images.imagem2[0].filename : null,
+    images.imagem3 ? images.imagem3[0].filename : null,
     data.endereco,
     data.data_inicial,
     data.data_final,
@@ -139,12 +139,12 @@ exports.insertOpcoesHoteis = async (data) => {
   );
 };
 
-exports.updateOpcoeshoteis = async (data, id) => {
+exports.updateOpcoeshoteis = async (data, id, images) => {
   const values = [
     data.client_id,
-    data.imagem1,
-    data.imagem2,
-    data.imagem3,
+    images ? images.imagem1[0].filename : null, // Verifique se há imagem e obtenha o nome do arquivo
+    images ? images.imagem2[0].filename : null,
+    images ? images.imagem3[0].filename : null,
     data.endereco,
     data.data_inicial,
     data.data_final,
@@ -154,15 +154,35 @@ exports.updateOpcoeshoteis = async (data, id) => {
     data.cafe_da_manha,
     id,
   ];
-  await connection.query(
-    "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,cafe_da_manha=? WHERE id=?",
-    values
-  );
+
+  try {
+    await connection.query(
+      "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,cafe_da_manha=? WHERE id=?",
+      values
+    );
+    console.log("Opções de hotéis atualizadas com sucesso no banco de dados.");
+  } catch (error) {
+    console.error(
+      "Erro ao atualizar opções de hotéis no banco de dados:",
+      error
+    );
+    throw error;
+  }
 };
 
 exports.deleteOpcoesHoteis = async (id) => {
   const values = [id];
   await connection.query("DELETE FROM opcoes_hoteis WHERE id=?", values);
+};
+
+exports.SelectOpcoesHoteisImages = async (id) => {
+  const values = [id];
+  const [result] = await connection.query(
+    "SELECT imagem1, imagem2, imagem3 FROM opcoes_hoteis WHERE id=?",
+    values
+  );
+
+  return result;
 };
 
 exports.selectOpcoesServicos = async () => {
