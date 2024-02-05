@@ -142,9 +142,9 @@ exports.insertOpcoesHoteis = async (data, images) => {
 exports.updateOpcoeshoteis = async (data, id, images) => {
   const values = [
     data.client_id,
-    images ? images.imagem1[0].filename : null, // Verifique se há imagem e obtenha o nome do arquivo
-    images ? images.imagem2[0].filename : null,
-    images ? images.imagem3[0].filename : null,
+    images && images.imagem1 ? images.imagem1[0].filename : null,
+    images && images.imagem2 ? images.imagem2[0].filename : null,
+    images && images.imagem3 ? images.imagem3[0].filename : null,
     data.endereco,
     data.data_inicial,
     data.data_final,
