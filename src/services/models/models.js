@@ -263,14 +263,6 @@ exports.selectOpcoesValoresId = async (id) => {
   return result[0];
 };
 
-exports.selectOpcoesServicosClientId = async (id) => {
-  const result = await connection.query(
-    "SELECT * FROM servicos WHERE client_id=?;",
-    [id]
-  );
-  return result[0];
-};
-
 exports.selectOpcoesValoresClientId = async (id) => {
   const result = await connection.query(
     "SELECT * FROM valores WHERE client_id=?;",
