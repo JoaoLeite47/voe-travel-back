@@ -3,7 +3,7 @@ require("dotenv").config();
 const models = require("./src/services/models/models");
 const cors = require("cors");
 const multer = require("multer");
-const fs = require('fs/promises');
+const fs = require("fs");
 
 const app = express();
 
@@ -20,7 +20,14 @@ app.use(
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads"); // Defina a pasta de destino para os arquivos enviados
+    const uploadFolder = "uploads";
+
+    // Verifique se a pasta de destino existe, crie-a se não existir
+    if (!fs.existsSync(uploadFolder)) {
+      fs.mkdirSync(uploadFolder);
+    }
+
+    cb(null, uploadFolder);
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname);
