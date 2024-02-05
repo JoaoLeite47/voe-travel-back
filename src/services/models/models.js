@@ -230,3 +230,44 @@ exports.deleteServicos = async (id) => {
   const values = [id];
   await connection.query("DELETE FROM servicos WHERE id=?", values);
 };
+
+exports.selectOpcoesValores = async () => {
+  const result = await connection.query("SELECT * FROM valores;");
+  return result[0];
+};
+
+exports.selectOpcoesValoresId = async (id) => {
+  const result = await connection.query("SELECT * FROM valores WHERE id=?;", [
+    id,
+  ]);
+  return result[0];
+};
+
+exports.selectOpcoesServicosClientId = async (id) => {
+  const result = await connection.query(
+    "SELECT * FROM servicos WHERE client_id=?;",
+    [id]
+  );
+  return result[0];
+};
+
+exports.insertValores = async (data) => {
+  const values = [data.client_id, data.valor_inicial, data.valor_final];
+  await connection.query(
+    "INSERT INTO valores(client_id, valor_inicial, valor_final ) VALUES (?,?,?)",
+    values
+  );
+};
+
+exports.updateValores = async (data, id) => {
+  const values = [data.client_id, data.valor_inicial, data.valor_final, id];
+  await connection.query(
+    "UPDATE valores SET client_id=?,valor_inicial=?,valor_final=? WHERE id=?",
+    values
+  );
+};
+
+exports.deleteValores = async (id) => {
+  const values = [id];
+  await connection.query("DELETE FROM valores WHERE id=?", values);
+};

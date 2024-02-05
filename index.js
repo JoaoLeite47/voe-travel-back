@@ -162,6 +162,36 @@ app.delete("/servicos/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
+app.get("/valores", async (req, res) => {
+  const results = await models.selectOpcoesValores();
+  res.json(results);
+});
+
+app.get("/valores/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectOpcoesValoresId(id);
+  res.json(results);
+});
+
+app.post("/valores", async (req, res) => {
+  const valores = req.body;
+  await models.insertValores(valores);
+  res.sendStatus(201);
+});
+
+app.patch("/valores/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+  await models.updateValores(data, id);
+  res.sendStatus(200);
+});
+
+app.delete("/valores/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  await models.deleteValores(id);
+  res.sendStatus(204);
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
