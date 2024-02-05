@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon index"
+    "start": "npx nodemon --delay 10000 index"
   },
   "author": "",
   "license": "ISC",
