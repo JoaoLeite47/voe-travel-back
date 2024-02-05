@@ -67,12 +67,10 @@ exports.insertOpcoesAereas = async (data) => {
     data.data_final,
     data.horario_inicial,
     data.horario_final,
-    data.valor_inicial,
-    data.valor_final,
     data.cia_aerea,
   ];
   await connection.query(
-    "INSERT INTO opcoes_aereas(id_client, origem, destino, data_inicial, data_final, horario_inicial, horario_final, valor_inicial, valor_final, cia_aerea) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO opcoes_aereas(id_client, origem, destino, data_inicial, data_final, horario_inicial, horario_final, cia_aerea) VALUES (?,?,?,?,?,?,?,?)",
     values
   );
 };
@@ -86,13 +84,11 @@ exports.updateOpcoesAereas = async (data, id) => {
     data.data_final,
     data.horario_inicial,
     data.horario_final,
-    data.valor_inicial,
-    data.valor_final,
     data.cia_aerea,
     id,
   ];
   await connection.query(
-    "UPDATE opcoes_aereas SET id_client=?,origem=?,destino=?,data_inicial=?,data_final=?,horario_inicial=?,horario_final=?,valor_inicial=?,valor_final=?,cia_aerea=? WHERE id=?",
+    "UPDATE opcoes_aereas SET id_client=?,origem=?,destino=?,data_inicial=?,data_final=?,horario_inicial=?,horario_final=?,cia_aerea=? WHERE id=?",
     values
   );
 };
@@ -136,11 +132,9 @@ exports.insertOpcoesHoteis = async (data) => {
     data.quarto_escolhido_tipo,
     data.quarto_escolhido_endereco,
     data.cafe_da_manha,
-    data.valor_inicial,
-    data.valor_final,
   ];
   await connection.query(
-    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco, cafe_da_manha, valor_inicial,valor_final ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco, cafe_da_manha ) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
     values
   );
 };
@@ -158,12 +152,10 @@ exports.updateOpcoeshoteis = async (data, id) => {
     data.quarto_escolhido_tipo,
     data.quarto_escolhido_endereco,
     data.cafe_da_manha,
-    data.valor_inicial,
-    data.valor_final,
     id,
   ];
   await connection.query(
-    "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,cafe_da_manha=?,valor_inicial=?,valor_final=? WHERE id=?",
+    "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,cafe_da_manha=? WHERE id=?",
     values
   );
 };
@@ -186,9 +178,10 @@ exports.selectOpcoesServicosId = async (id) => {
 };
 
 exports.selectOpcoesServicosClientId = async (id) => {
-  const result = await connection.query("SELECT * FROM servicos WHERE client_id=?;", [
-    id,
-  ]);
+  const result = await connection.query(
+    "SELECT * FROM servicos WHERE client_id=?;",
+    [id]
+  );
   return result[0];
 };
 
@@ -213,27 +206,27 @@ exports.insertServicos = async (data) => {
 };
 
 exports.updateServicos = async (data, id) => {
-    const values = [
-        data.client_id,
-        data.aluguel_de_carros,
-        data.aluguel_de_carros_descricao,
-        data.passeios,
-        data.passeios_descricao,
-        data.ingressos,
-        data.ingressos_descricao,
-        data.guias,
-        data.guias_descricao,
-        data.cruzeiros,
-        data.cruzeiros_descricao,
-        id
-      ];
-    await connection.query(
-      "UPDATE servicos SET client_id=?,aluguel_de_carros=?,aluguel_de_carros_descricao=?,passeios=?,passeios_descricao=?,ingressos=?,ingressos_descricao=?,guias=?,guias_descricao=?,cruzeiros=?,cruzeiros_descricao=? WHERE id=?",
-      values
-    );
-  };
+  const values = [
+    data.client_id,
+    data.aluguel_de_carros,
+    data.aluguel_de_carros_descricao,
+    data.passeios,
+    data.passeios_descricao,
+    data.ingressos,
+    data.ingressos_descricao,
+    data.guias,
+    data.guias_descricao,
+    data.cruzeiros,
+    data.cruzeiros_descricao,
+    id,
+  ];
+  await connection.query(
+    "UPDATE servicos SET client_id=?,aluguel_de_carros=?,aluguel_de_carros_descricao=?,passeios=?,passeios_descricao=?,ingressos=?,ingressos_descricao=?,guias=?,guias_descricao=?,cruzeiros=?,cruzeiros_descricao=? WHERE id=?",
+    values
+  );
+};
 
-  exports.deleteServicos = async (id) => {
-    const values = [id];
-    await connection.query("DELETE FROM servicos WHERE id=?", values);
-  };
+exports.deleteServicos = async (id) => {
+  const values = [id];
+  await connection.query("DELETE FROM servicos WHERE id=?", values);
+};
