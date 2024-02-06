@@ -3,6 +3,7 @@ require("dotenv").config();
 const models = require("./src/services/models/models");
 const cors = require("cors");
 const multer = require("multer");
+const nodemailer = require("nodemailer");
 const fs = require("fs");
 
 const app = express();
@@ -38,6 +39,35 @@ const upload = multer({ storage: storage });
 
 app.get("/", (req, res, next) => {
   res.send("connected to API!");
+});
+
+app.post("/enviarEmail", (req, res) => {
+  const { nome, email, numero, mensagem } = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: "outlook",
+    auth: {
+      user: "",
+      pass: "",
+    },
+  });
+
+  const mailOptions = {
+    from: "",
+    to: "",
+    subject: "Formulário (Voe+Travel)",
+    text: `Nome: ${nome}\nE-mail: ${email}\nNúmero: ${numero}\nMensagem: ${mensagem}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send("Erro no envio do e-mail");
+    } else {
+      console.log("E-mail enviado: " + info.response);
+      res.status(200).send("E-mail enviado com sucesso");
+    }
+  });
 });
 
 app.get("/clientes", async (req, res) => {
