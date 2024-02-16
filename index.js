@@ -75,6 +75,18 @@ app.get("/clientes", async (req, res) => {
   res.json(results);
 });
 
+app.get("/clientes_all/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectClienteData(id);
+  res.json(results);
+});
+
+app.get("/clientesPedido/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectClientsByNumber(id);
+  res.json(results);
+});
+
 app.get("/clientes/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const results = await models.selectClientsId(id);

@@ -8,6 +8,43 @@ exports.selectClients = async () => {
   return result[0];
 };
 
+exports.selectClienteData = async (id) => {
+  // Consulta para obter os dados do cliente
+  const clienteData = await connection.query("SELECT * FROM clientes WHERE pedido=?", [id]);
+
+  // Verifica se o cliente foi encontrado
+  if (clienteData.length === 0) {
+    throw new Error(`Cliente com pedido ${id} não encontrado`);
+  }
+
+  const cliente = clienteData[0][0];
+  console.log(cliente)
+
+  // Realiza as outras consultas usando o ID do cliente
+  const [opcoesAereas, opcoesHoteis, opcoesServicos, opcoesValores] = await Promise.all([
+    connection.query("SELECT * FROM opcoes_aereas WHERE id_client=?", [cliente.id]),
+    connection.query("SELECT * FROM opcoes_hoteis WHERE client_id=?", [cliente.id]),
+    connection.query("SELECT * FROM servicos WHERE client_id=?", [cliente.id]),
+    connection.query("SELECT * FROM valores WHERE client_id=?", [cliente.id]),
+  ]);
+
+  return {
+    cliente,
+    opcoesAereas: opcoesAereas[0],
+    opcoesHoteis: opcoesHoteis[0],
+    opcoesServicos: opcoesServicos[0],
+    opcoesValores: opcoesValores[0],
+  };
+};
+
+exports.selectClientsByNumber = async (id) => {
+  const result = await connection.query(
+    "SELECT * FROM clientes WHERE pedido=?;",
+    [id]
+  );
+  return result[0];
+};
+
 exports.selectClientsId = async (id) => {
   const result = await connection.query("SELECT * FROM clientes WHERE id=?;", [
     id,
