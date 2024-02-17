@@ -167,41 +167,24 @@ app.get("/opcoes_hoteis_cliente/:id", async (req, res) => {
   res.json(results);
 });
 
-app.post(
-  "/opcoes_hoteis",
-  upload.fields([
-    { name: "imagem1", maxCount: 1 },
-    { name: "imagem2", maxCount: 1 },
-    { name: "imagem3", maxCount: 1 },
-  ]),
-  async (req, res) => {
-    const opcoes_hoteis = req.body;
-    const images = req.files; // As imagens enviadas estarão disponíveis em req.files
-
-    try {
-      await models.insertOpcoesHoteis(opcoes_hoteis, images);
-      res.sendStatus(201);
-    } catch (error) {
-      console.error("Erro ao inserir opções de hotéis:", error);
-      res.status(500).send("Erro interno no servidor");
-    }
+app.post("/opcoes_hoteis", async (req, res) => {
+  const opcoes_hoteis = req.body;
+  try {
+    await models.insertOpcoesHoteis(opcoes_hoteis);
+    res.sendStatus(201);
+  } catch (error) {
+    console.error("Erro ao inserir opções de hotéis:", error);
+    res.status(500).send("Erro interno no servidor");
   }
-);
+});
 
 app.patch(
   "/opcoes_hoteis/:id",
-  upload.fields([
-    { name: "imagem1", maxCount: 1 },
-    { name: "imagem2", maxCount: 1 },
-    { name: "imagem3", maxCount: 1 },
-  ]),
   async (req, res) => {
     const id = parseInt(req.params.id);
     const data = req.body;
-    const images = req.files; // Imagens enviadas estarão disponíveis em req.files
-
     try {
-      await models.updateOpcoeshoteis(data, id, images);
+      await models.updateOpcoeshoteis(data, id);
       res.sendStatus(200);
     } catch (error) {
       console.error("Erro ao atualizar opções de hotéis:", error);
@@ -213,32 +196,7 @@ app.patch(
 app.delete("/opcoes_hoteis/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   try {
-    const result = await models.SelectOpcoesHoteisImages(id);
-
-    if (!result || result.length === 0) {
-      throw new Error("Entrada não encontrada para o ID especificado");
-    }
-
-    const { imagem1, imagem2, imagem3 } = result[0];
-
-    // Função para verificar e excluir o arquivo
-    const deleteFile = async (path) => {
-      if (fs.existsSync(path)) {
-        await unlinkAsync(path);
-        console.log(`Arquivo ${path} excluído com sucesso.`);
-      } else {
-        console.log(`Arquivo ${path} não encontrado.`);
-      }
-    };
-
-    // Exclua as imagens do sistema de arquivos se existirem
-    await deleteFile(`uploads/${imagem1}`);
-    await deleteFile(`uploads/${imagem2}`);
-    await deleteFile(`uploads/${imagem3}`);
-
-    // Agora exclua a entrada do banco de dados
     await models.deleteOpcoesHoteis(id);
-    console.log(`Opções de hotéis com ID ${id} excluídas com sucesso.`);
     res.sendStatus(204);
   } catch (error) {
     console.error("Erro ao excluir opções de hotéis:", error);

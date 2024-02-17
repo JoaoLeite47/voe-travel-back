@@ -4,38 +4,60 @@ const mysql = require("mysql2/promise");
 
 const connection = mysql.createPool(process.env.DATABASE_URL);
 
+function getBase64Image(buffer) {
+  const base64String = Buffer.from(buffer).toString("base64");
+  return `data:image/jpeg;base64,${base64String}`;
+}
+
 exports.selectClients = async () => {
   const result = await connection.query("SELECT * FROM clientes;");
   return result[0];
 };
 
 exports.selectClienteData = async (id) => {
-  // Consulta para obter os dados do cliente
-  const clienteData = await connection.query("SELECT * FROM clientes WHERE pedido=?", [id]);
+  try {
+    const clienteData = await connection.query(
+      "SELECT * FROM clientes WHERE pedido=?",
+      [id]
+    );
 
-  // Verifica se o cliente foi encontrado
-  if (clienteData.length === 0) {
-    throw new Error(`Cliente com pedido ${id} não encontrado`);
+    // Verifica se o cliente foi encontrado
+    if (clienteData.length === 0) {
+      throw new Error(`Cliente com pedido ${id} não encontrado`);
+    }
+
+    const cliente = clienteData[0][0];
+    console.log(cliente);
+
+    // Realiza as outras consultas usando o ID do cliente
+    const [opcoesAereas, opcoesHoteis, opcoesServicos, opcoesValores] =
+      await Promise.all([
+        connection.query("SELECT * FROM opcoes_aereas WHERE id_client=?", [
+          cliente.id,
+        ]),
+        connection.query("SELECT * FROM opcoes_hoteis WHERE client_id=?", [
+          cliente.id,
+        ]),
+        connection.query("SELECT * FROM servicos WHERE client_id=?", [
+          cliente.id,
+        ]),
+        connection.query("SELECT * FROM valores WHERE client_id=?", [
+          cliente.id,
+        ]),
+      ]);
+
+    return {
+      cliente,
+      opcoesAereas: opcoesAereas[0],
+      opcoesHoteis: opcoesHoteis[0],
+      opcoesServicos: opcoesServicos[0],
+      opcoesValores: opcoesValores[0],
+    };
+  } catch (error) {
+    console.error("Erro ao selecionar dados do cliente:", error);
+    throw error;
   }
-
-  const cliente = clienteData[0][0];
-  console.log(cliente)
-
-  // Realiza as outras consultas usando o ID do cliente
-  const [opcoesAereas, opcoesHoteis, opcoesServicos, opcoesValores] = await Promise.all([
-    connection.query("SELECT * FROM opcoes_aereas WHERE id_client=?", [cliente.id]),
-    connection.query("SELECT * FROM opcoes_hoteis WHERE client_id=?", [cliente.id]),
-    connection.query("SELECT * FROM servicos WHERE client_id=?", [cliente.id]),
-    connection.query("SELECT * FROM valores WHERE client_id=?", [cliente.id]),
-  ]);
-
-  return {
-    cliente,
-    opcoesAereas: opcoesAereas[0],
-    opcoesHoteis: opcoesHoteis[0],
-    opcoesServicos: opcoesServicos[0],
-    opcoesValores: opcoesValores[0],
-  };
+  // Consulta para obter os dados do cliente
 };
 
 exports.selectClientsByNumber = async (id) => {
@@ -157,12 +179,12 @@ exports.selectOpcoesHoteisClientId = async (id) => {
   return result[0];
 };
 
-exports.insertOpcoesHoteis = async (data, images) => {
+exports.insertOpcoesHoteis = async (data) => {
   const values = [
     data.client_id,
-    images.imagem1 ? images.imagem1[0].filename : null,
-    images.imagem2 ? images.imagem2[0].filename : null,
-    images.imagem3 ? images.imagem3[0].filename : null,
+    data.imagem1,
+    data.imagem2,
+    data.imagem3,
     data.endereco,
     data.data_inicial,
     data.data_final,
@@ -176,12 +198,12 @@ exports.insertOpcoesHoteis = async (data, images) => {
   );
 };
 
-exports.updateOpcoeshoteis = async (data, id, images) => {
+exports.updateOpcoeshoteis = async (data, id) => {
   const values = [
     data.client_id,
-    images && images.imagem1 ? images.imagem1[0].filename : null,
-    images && images.imagem2 ? images.imagem2[0].filename : null,
-    images && images.imagem3 ? images.imagem3[0].filename : null,
+    data.imagem1,
+    data.imagem2,
+    data.imegem3,
     data.endereco,
     data.data_inicial,
     data.data_final,
@@ -209,16 +231,6 @@ exports.updateOpcoeshoteis = async (data, id, images) => {
 exports.deleteOpcoesHoteis = async (id) => {
   const values = [id];
   await connection.query("DELETE FROM opcoes_hoteis WHERE id=?", values);
-};
-
-exports.SelectOpcoesHoteisImages = async (id) => {
-  const values = [id];
-  const [result] = await connection.query(
-    "SELECT imagem1, imagem2, imagem3 FROM opcoes_hoteis WHERE id=?",
-    values
-  );
-
-  return result;
 };
 
 exports.selectOpcoesServicos = async () => {
@@ -310,17 +322,28 @@ exports.selectOpcoesValoresClientId = async (id) => {
 };
 
 exports.insertValores = async (data) => {
-  const values = [data.client_id, data.valor_inicial, data.valor_final];
+  const values = [
+    data.client_id,
+    data.valor_inicial,
+    data.valor_final,
+    data.link_pagamento,
+  ];
   await connection.query(
-    "INSERT INTO valores(client_id, valor_inicial, valor_final ) VALUES (?,?,?)",
+    "INSERT INTO valores(client_id, valor_inicial, valor_final, link_pagamento ) VALUES (?,?,?,?)",
     values
   );
 };
 
 exports.updateValores = async (data, id) => {
-  const values = [data.client_id, data.valor_inicial, data.valor_final, id];
+  const values = [
+    data.client_id,
+    data.valor_inicial,
+    data.valor_final,
+    data.link_pagamento,
+    id,
+  ];
   await connection.query(
-    "UPDATE valores SET client_id=?,valor_inicial=?,valor_final=? WHERE id=?",
+    "UPDATE valores SET client_id=?,valor_inicial=?,valor_final=?, link_pagamento=? WHERE id=?",
     values
   );
 };
