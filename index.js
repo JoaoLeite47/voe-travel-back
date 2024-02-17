@@ -5,6 +5,8 @@ const cors = require("cors");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
+const util = require("util");
+const unlinkAsync = util.promisify(fs.unlink);
 
 const app = express();
 
@@ -219,10 +221,20 @@ app.delete("/opcoes_hoteis/:id", async (req, res) => {
 
     const { imagem1, imagem2, imagem3 } = result[0];
 
+    // Função para verificar e excluir o arquivo
+    const deleteFile = async (path) => {
+      if (fs.existsSync(path)) {
+        await unlinkAsync(path);
+        console.log(`Arquivo ${path} excluído com sucesso.`);
+      } else {
+        console.log(`Arquivo ${path} não encontrado.`);
+      }
+    };
+
     // Exclua as imagens do sistema de arquivos se existirem
-    if (imagem1) await fs.unlink(`uploads/${imagem1}`);
-    if (imagem2) await fs.unlink(`uploads/${imagem2}`);
-    if (imagem3) await fs.unlink(`uploads/${imagem3}`);
+    await deleteFile(`uploads/${imagem1}`);
+    await deleteFile(`uploads/${imagem2}`);
+    await deleteFile(`uploads/${imagem3}`);
 
     // Agora exclua a entrada do banco de dados
     await models.deleteOpcoesHoteis(id);
