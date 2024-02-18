@@ -14,7 +14,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Substitua pela origem do seu cliente
+    // origin: "http://localhost:5173", // Substitua pela origem do seu cliente
+    origin: "https://voe-travel-front.vercel.app", // Substitua pela origem do seu cliente
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
@@ -178,20 +179,17 @@ app.post("/opcoes_hoteis", async (req, res) => {
   }
 });
 
-app.patch(
-  "/opcoes_hoteis/:id",
-  async (req, res) => {
-    const id = parseInt(req.params.id);
-    const data = req.body;
-    try {
-      await models.updateOpcoeshoteis(data, id);
-      res.sendStatus(200);
-    } catch (error) {
-      console.error("Erro ao atualizar opções de hotéis:", error);
-      res.status(500).send("Erro interno no servidor");
-    }
+app.patch("/opcoes_hoteis/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+  try {
+    await models.updateOpcoeshoteis(data, id);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Erro ao atualizar opções de hotéis:", error);
+    res.status(500).send("Erro interno no servidor");
   }
-);
+});
 
 app.delete("/opcoes_hoteis/:id", async (req, res) => {
   const id = parseInt(req.params.id);
