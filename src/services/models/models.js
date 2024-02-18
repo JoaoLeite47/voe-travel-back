@@ -191,9 +191,11 @@ exports.insertOpcoesHoteis = async (data) => {
     data.quarto_escolhido,
     data.quarto_escolhido_tipo,
     data.quarto_escolhido_endereco,
+    data.nome_do_quarto,
+    data.diarias,
   ];
   await connection.query(
-    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco ) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco, nome_do_quarto, diarias ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
     values
   );
 };
@@ -203,19 +205,21 @@ exports.updateOpcoeshoteis = async (data, id) => {
     data.client_id,
     data.imagem1,
     data.imagem2,
-    data.imegem3,
+    data.imagem3,
     data.endereco,
     data.data_inicial,
     data.data_final,
     data.quarto_escolhido,
     data.quarto_escolhido_tipo,
     data.quarto_escolhido_endereco,
+    data.nome_do_quarto,
+    data.diarias,
     id,
   ];
 
   try {
     await connection.query(
-      "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=? WHERE id=?",
+      "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,nome_do_quarto=?,diarias=? WHERE id=?",
       values
     );
     console.log("Opções de hotéis atualizadas com sucesso no banco de dados.");
@@ -291,7 +295,7 @@ exports.updateServicos = async (data, id) => {
     id,
   ];
   await connection.query(
-    "UPDATE servicos SET client_id=?,aluguel_de_carros=?,aluguel_de_carros_descricao=?,passeios=?,passeios_descricao=?,ingressos=?,ingressos_descricao=?,guias=?,guias_descricao=?,cruzeiros=?,cruzeiros_descricao=?, cafe_da_manha=? WHERE id=?",
+    "UPDATE servicos SET client_id=?,aluguel_de_carros=?,aluguel_de_carros_descricao=?,passeios=?,passeios_descricao=?,ingressos=?,ingressos_descricao=?,guias=?,guias_descricao=?,cruzeiros=?,cruzeiros_descricao=?,cafe_da_manha=? WHERE id=?",
     values
   );
 };
