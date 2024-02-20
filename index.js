@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(
   cors({
     // origin: "http://localhost:5173", // Substitua pela origem do seu cliente
-    origin: "https://voe-travel-front.vercel.app", // Substitua pela origem do seu cliente
+    origin: "https://voemaistravel.com.br", // Substitua pela origem do seu cliente
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
