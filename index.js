@@ -48,16 +48,16 @@ app.post("/enviarEmail", (req, res) => {
   const { nome, email, numero, mensagem } = req.body;
 
   const transporter = nodemailer.createTransport({
-    service: "outlook",
+    service: "gmail",
     auth: {
-      user: "",
-      pass: "",
+      user: "flaviocaribecruz10@gmail.com",
+      pass: "flagui13",
     },
   });
 
   const mailOptions = {
-    from: "",
-    to: "",
+    from: "flaviocaribecruz10@gmail.com",
+    to: "flaviocaribecruz10@gmail.com",
     subject: "Formulário (Voe+Travel)",
     text: `Nome: ${nome}\nE-mail: ${email}\nNúmero: ${numero}\nMensagem: ${mensagem}`,
   };
