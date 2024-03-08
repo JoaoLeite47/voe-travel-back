@@ -131,9 +131,11 @@ exports.insertOpcoesAereas = async (data) => {
     data.horario_inicial_volta,
     data.horario_final_volta,
     data.codigo_reserva,
+    data.bagagem_mao,
+    data.bagagem_desp,
   ];
   await connection.query(
-    "INSERT INTO opcoes_aereas(id_client, origem, destino, data_inicial, data_final, horario_inicial, horario_final, cia_aerea, horario_inicial_volta, horario_final_volta, codigo_reserva) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO opcoes_aereas(id_client, origem, destino, data_inicial, data_final, horario_inicial, horario_final, cia_aerea, horario_inicial_volta, horario_final_volta, codigo_reserva, bagagem_mao, bagagem_desp) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
     values
   );
 };
@@ -151,10 +153,12 @@ exports.updateOpcoesAereas = async (data, id) => {
     data.horario_inicial_volta,
     data.horario_final_volta,
     data.codigo_reserva,
+    data.bagagem_mao,
+    data.bagagem_desp,
     id,
   ];
   await connection.query(
-    "UPDATE opcoes_aereas SET id_client=?,origem=?,destino=?,data_inicial=?,data_final=?,horario_inicial=?,horario_final=?,cia_aerea=?,horario_inicial_volta=?,horario_final_volta=?,codigo_reserva=? WHERE id=?",
+    "UPDATE opcoes_aereas SET id_client=?,origem=?,destino=?,data_inicial=?,data_final=?,horario_inicial=?,horario_final=?,cia_aerea=?,horario_inicial_volta=?,horario_final_volta=?,codigo_reserva=?,bagagem_mao=?,bagagem_desp=? WHERE id=?",
     values
   );
 };
