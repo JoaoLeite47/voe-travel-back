@@ -285,7 +285,7 @@ app.get("/conexoes/:id", async (req, res) => {
   res.json(results);
 });
 
-app.get("/conexoes/:id", async (req, res) => {
+app.get("/conexoes_vooId/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const results = await models.selectConexoesVooId(id);
   res.json(results);

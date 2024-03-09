@@ -201,11 +201,11 @@ exports.insertOpcoesHoteis = async (data) => {
     data.quarto_escolhido,
     data.quarto_escolhido_tipo,
     data.quarto_escolhido_endereco,
-    data.nome_do_quarto,
+    data.codigo_reserva,
     data.diarias,
   ];
   await connection.query(
-    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco, nome_do_quarto, diarias ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO opcoes_hoteis(client_id, imagem1, imagem2, imagem3, endereco, data_inicial, data_final, quarto_escolhido, quarto_escolhido_tipo, quarto_escolhido_endereco, codigo_reserva, diarias ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
     values
   );
 };
@@ -222,14 +222,14 @@ exports.updateOpcoeshoteis = async (data, id) => {
     data.quarto_escolhido,
     data.quarto_escolhido_tipo,
     data.quarto_escolhido_endereco,
-    data.nome_do_quarto,
+    data.codigo_reserva,
     data.diarias,
     id,
   ];
 
   try {
     await connection.query(
-      "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,nome_do_quarto=?,diarias=? WHERE id=?",
+      "UPDATE opcoes_hoteis SET client_id=?,imagem1=?,imagem2=?,imagem3=?,endereco=?,data_inicial=?,data_final=?,quarto_escolhido=?,quarto_escolhido_tipo=?,quarto_escolhido_endereco=?,codigo_reserva=?,diarias=? WHERE id=?",
       values
     );
     console.log("Opções de hotéis atualizadas com sucesso no banco de dados.");
