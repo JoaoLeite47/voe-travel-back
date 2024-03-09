@@ -14,8 +14,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    // origin: "http://localhost:5173", // Substitua pela origem do seu cliente
-    origin: "https://voemaistravel.com.br", // Substitua pela origem do seu cliente
+    origin: "http://localhost:5173", // Substitua pela origem do seu cliente
+    // origin: "https://voemaistravel.com.br", // Substitua pela origem do seu cliente
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
@@ -271,6 +271,42 @@ app.patch("/valores/:id", async (req, res) => {
 app.delete("/valores/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   await models.deleteValores(id);
+  res.sendStatus(204);
+});
+
+app.get("/conexoes", async (req, res) => {
+  const results = await models.selectConexoes();
+  res.json(results);
+});
+
+app.get("/conexoes/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectConexoesId(id);
+  res.json(results);
+});
+
+app.get("/conexoes/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const results = await models.selectConexoesVooId(id);
+  res.json(results);
+});
+
+app.post("/conexoes", async (req, res) => {
+  const opcoes_aereas = req.body;
+  await models.insertConexoes(opcoes_aereas);
+  res.sendStatus(201);
+});
+
+app.patch("/conexoes/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+  await models.updateConexoes(data, id);
+  res.sendStatus(200);
+});
+
+app.delete("/conexoes/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  await models.deleteConexoes(id);
   res.sendStatus(204);
 });
 

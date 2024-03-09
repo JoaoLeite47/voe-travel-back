@@ -366,3 +366,67 @@ exports.deleteValores = async (id) => {
   const values = [id];
   await connection.query("DELETE FROM valores WHERE id=?", values);
 };
+
+exports.selectConexoes = async () => {
+  const result = await connection.query("SELECT * FROM conexoes;");
+  return result[0];
+};
+
+exports.selectConexoesId = async (id) => {
+  const result = await connection.query("SELECT * FROM conexoes WHERE id=?;", [
+    id,
+  ]);
+  return result[0];
+};
+
+exports.selectConexoesVooId = async (id) => {
+  const result = await connection.query(
+    "SELECT * FROM conexoes WHERE id_voo=?;",
+    [id]
+  );
+  return result[0];
+};
+
+exports.insertConexoes = async (data) => {
+  const values = [
+    data.id_voo,
+    data.origem,
+    data.destino,
+    data.data_voo,
+    data.horario_saida,
+    data.horario_chegada,
+    data.cia_aerea,
+    data.codigo_reserva,
+    data.bagagem_mao,
+    data.bagagem_desp,
+  ];
+  await connection.query(
+    "INSERT INTO conexoes(id_voo, origem, destino, data_voo, horario_saida, horario_chegada, cia_aerea, codigo_reserva, bagagem_mao, bagagem_desp) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    values
+  );
+};
+
+exports.updateConexoes = async (data, id) => {
+  const values = [
+    data.id_voo,
+    data.origem,
+    data.destino,
+    data.data_voo,
+    data.horario_saida,
+    data.horario_chegada,
+    data.cia_aerea,
+    data.codigo_reserva,
+    data.bagagem_mao,
+    data.bagagem_desp,
+    id,
+  ];
+  await connection.query(
+    "UPDATE conexoes SET id_voo=?,origem=?,destino=?,data_voo=?,horario_saida=?,horario_chegada=?,cia_aerea=?,codigo_reserva=?,bagagem_mao=?,bagagem_desp=? WHERE id=?",
+    values
+  );
+};
+
+exports.deleteConexoes = async (id) => {
+  const values = [id];
+  await connection.query("DELETE FROM conexoes WHERE id=?", values);
+};
