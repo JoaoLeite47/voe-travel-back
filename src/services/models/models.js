@@ -348,9 +348,10 @@ exports.insertValores = async (data) => {
     data.valor_inicial,
     data.valor_final,
     data.link_pagamento,
+    data.oferta,
   ];
   await connection.query(
-    "INSERT INTO valores(client_id, valor_inicial, valor_final, link_pagamento ) VALUES (?,?,?,?)",
+    "INSERT INTO valores(client_id, valor_inicial, valor_final, link_pagamento, oferta ) VALUES (?,?,?,?,?)",
     values
   );
 };
@@ -361,10 +362,11 @@ exports.updateValores = async (data, id) => {
     data.valor_inicial,
     data.valor_final,
     data.link_pagamento,
+    data.oferta,
     id,
   ];
   await connection.query(
-    "UPDATE valores SET client_id=?,valor_inicial=?,valor_final=?, link_pagamento=? WHERE id=?",
+    "UPDATE valores SET client_id=?,valor_inicial=?,valor_final=?, link_pagamento=?, oferta=? WHERE id=?",
     values
   );
 };
