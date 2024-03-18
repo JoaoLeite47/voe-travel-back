@@ -30,21 +30,27 @@ exports.selectClienteData = async (id) => {
     console.log(cliente);
 
     // Realiza as outras consultas usando o ID do cliente
-    const [opcoesAereas, opcoesHoteis, opcoesServicos, opcoesValores] =
-      await Promise.all([
-        connection.query("SELECT * FROM opcoes_aereas WHERE id_client=?", [
-          cliente.id,
-        ]),
-        connection.query("SELECT * FROM opcoes_hoteis WHERE client_id=?", [
-          cliente.id,
-        ]),
-        connection.query("SELECT * FROM servicos WHERE client_id=?", [
-          cliente.id,
-        ]),
-        connection.query("SELECT * FROM valores WHERE client_id=?", [
-          cliente.id,
-        ]),
-      ]);
+    const [
+      opcoesAereas,
+      opcoesHoteis,
+      opcoesServicos,
+      opcoesValores,
+      conexoes,
+    ] = await Promise.all([
+      connection.query("SELECT * FROM opcoes_aereas WHERE id_client=?", [
+        cliente.id,
+      ]),
+      connection.query("SELECT * FROM opcoes_hoteis WHERE client_id=?", [
+        cliente.id,
+      ]),
+      connection.query("SELECT * FROM servicos WHERE client_id=?", [
+        cliente.id,
+      ]),
+      connection.query("SELECT * FROM valores WHERE client_id=?", [cliente.id]),
+      connection.query("SELECT * FROM conexoes WHERE id_client=?", [
+        cliente.id,
+      ]),
+    ]);
 
     return {
       cliente,
@@ -52,6 +58,7 @@ exports.selectClienteData = async (id) => {
       opcoesHoteis: opcoesHoteis[0],
       opcoesServicos: opcoesServicos[0],
       opcoesValores: opcoesValores[0],
+      conexoes: conexoes[0],
     };
   } catch (error) {
     console.error("Erro ao selecionar dados do cliente:", error);
@@ -399,9 +406,10 @@ exports.insertConexoes = async (data) => {
     data.codigo_reserva,
     data.bagagem_mao,
     data.bagagem_desp,
+    data.id_client,
   ];
   await connection.query(
-    "INSERT INTO conexoes(id_voo, origem, destino, data_voo, horario_saida, horario_chegada, cia_aerea, codigo_reserva, bagagem_mao, bagagem_desp) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO conexoes(id_voo, origem, destino, data_voo, horario_saida, horario_chegada, cia_aerea, codigo_reserva, bagagem_mao, bagagem_desp, id_client) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
     values
   );
 };
